@@ -1,0 +1,4 @@
+s1
+http://www.beingjavaguys.com/2013/05/spring-form-validation.html
+https://stackjava.com/spring/form-validation-code-vi-du-validate-form-trong-spring-mvc.html
+https://www.journaldev.com/2668/spring-validation-example-mvc-validator
