@@ -1,0 +1,11 @@
+body {
+    padding-top: 60px;
+}
+
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+.help-block {
+    color:red !important;
+}
