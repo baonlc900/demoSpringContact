@@ -67,8 +67,11 @@ public class ContactController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String updateContact(Contact contact) {
+    public String updateContact(@Valid Contact contact,BindingResult result) {
         System.out.println("Contact ID: " + contact.getId());
+        if(result.hasErrors()) {
+            return "contact/edit";
+        }
         this.contactService.saveContact(contact);
         return "redirect:/contacts/view/" + contact.getId();
     }
