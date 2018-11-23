@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Contacts - CRUD in Spring Boot with Spring Data JPA</title>
     <!--/*/ <th:block th:include="fragments/head :: head"></th:block> /*/-->
 
@@ -14,7 +14,8 @@
         <div class="col-sm-10 col-sm-offset-1">
             <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Contacts <a th:href="@{/contacts/add}" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></div>
+                <div class="panel-heading">Contacts <a th:href="@{/contacts/add}" class="btn btn-primary"><span
+                        class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></div>
                 <table class="table">
                     <thead>
                     <tr>
@@ -28,30 +29,69 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <div th:if="!${#lists.isEmpty(contacts)}">
-                        <tr th:each = "contact : ${contacts}">
-                            <td th:text = "${contact.id}"></td>
-                            <td th:text = "${contact.lastName}"></td>
-                            <td th:text = "${contact.firstName}"></td>
-                            <td th:text = "${contact.mobileNumber}"></td>
-                            <td th:text = "${contact.address}"></td>
-                            <td th:text = "${contact.email}"></td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="...">
-                                    <a th:href="${'/contacts/view/' + contact.id}" class="btn btn-info"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
-                                    <a th:href="${'/contacts/edit/' + contact.id}" class="btn btn-success"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
-                                    <a th:href="${'/contacts/delete/' + contact.id}" class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-                                </div>
-                            </td>
-                        </tr>
+                    <div th:if="!${#lists.isEmpty(contacts.pageList)}">
+                        <div class="row">
+                            <tr th:each="contact : ${contacts.pageList}">
+                                <td th:text="${contact.id}"></td>
+                                <td th:text="${contact.lastName}"></td>
+                                <td th:text="${contact.firstName}"></td>
+                                <td th:text="${contact.mobileNumber}"></td>
+                                <td th:text="${contact.address}"></td>
+                                <td th:text="${contact.email}"></td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <a th:href="${'/contacts/view/' + contact.id}" class="btn btn-info"><span
+                                                class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                                        <a th:href="${'/contacts/edit/' + contact.id}" class="btn btn-success"><span
+                                                class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                        <a th:href="${'/contacts/delete/' + contact.id}" class="btn btn-danger"><span
+                                                class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </div>
+
+
                     </div>
-                    <div th:if="${#lists.isEmpty(contacts)}">
+                    <div th:if="${#lists.isEmpty(contacts.pageList)}">
                         <tr>
                             <td>No contact exists!</td>
                         </tr>
                     </div>
                     </tbody>
                 </table>
+                <ul class="pagination">
+                    <li
+                            th:class="${currentIndex == 1}? 'page-item disabled' : 'page-item'">
+                        <span th:if="${currentIndex == 1}">First</span>
+                        <a th:if="${currentIndex != 1}" class="page-link" th:href="@{/contacts/page/1}">First</a>
+                    </li>
+                    <li
+                            th:class="${currentIndex != 1}? 'page-item': 'page-item disabled'">
+                        <span th:if="${currentIndex == 1}">&lt;&lt;&#10;</span>
+                        <a th:if="${currentIndex != 1}" class="page-link" aria-label="Previous"
+                           th:href="@{|${baseUrl}${currentIndex - 1}|}" title='Go to previous page'><span
+                                aria-hidden="true">&lt;&lt;&#10;</span> <span class="sr-only">Previous</span></a>
+                    </li>
+                    <li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+                        th:class="${item == currentIndex ? 'page-item active' :'page-item' }">
+                        <a class="page-link" th:href="@{|${baseUrl}${item}|}"> <span th:text='${item}'>1</span>
+                        </a>
+                    </li>
+                    <li
+                            th:class="${currentIndex != totalPageCount}? 'page-item': 'page-item disabled'">
+                        <span th:if="${currentIndex == totalPageCount}">&gt;&gt;</span>
+                        <a th:if="${currentIndex != totalPageCount}" class="page-link" aria-label="Next"
+                           th:href="@{|${baseUrl}${currentIndex + 1}|}" title='Go to next page'><span
+                                aria-hidden="true">&gt;&gt;</span> <span class="sr-only">Next</span></a>
+                    </li>
+                    <li
+                            th:class="${currentIndex == totalPageCount}? 'page-item disabled':'page-item'">
+                        <span th:if="${currentIndex == totalPageCount}">Last</span>
+                        <a th:if="${currentIndex != totalPageCount}" class="page-link"
+                           th:href="@{|${baseUrl}${totalPageCount}|}">Last</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

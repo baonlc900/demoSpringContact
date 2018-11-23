@@ -22,7 +22,7 @@ public class Contact {
     private String firstName;
     @Column(name = "mobile_no")
     @Size(min = 10, max = 11, message = "Mobile no. must be 10-11 digits.")
-    @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile no. must be number")
+    @Pattern(regexp = "(^$|[0-9]+$)", message = "Mobile no. must be number")
     private String mobileNumber;
     @NotEmpty(message = "Address is required.")
     private String address;
