@@ -5,6 +5,7 @@ import com.example.demo.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +25,10 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Optional<Contact> getContactById(Integer id) {
         return this.contactRepository.findById(id);
+    }
+    @Override
+    public List<Contact> search(String firstName) {
+        return contactRepository.findByFirstName(firstName);
     }
 
     @Override

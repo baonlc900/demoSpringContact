@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -119,7 +120,51 @@ public class ContactController {
         model.addAttribute("beginIndex", begin);
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current);
-        System.out.println("curent" +current);
+        model.addAttribute("totalPageCount", totalPageCount);
+        model.addAttribute("baseUrl", baseUrl);
+        model.addAttribute("contacts", pages);
+
+        return "contact/index";
+
+    }
+
+    // Find Contact List
+    @RequestMapping(value = "/search/{pageNumber}", method = RequestMethod.GET)
+    public String searchContact(@RequestParam(value = "s", required = false) String s, Model model,
+                                HttpServletRequest request, @PathVariable int pageNumber) {
+        if (s.equals("")) {
+            return "redirect:/contacts";
+        }
+
+
+        List<Contact> list = contactService.search(s);
+        if (list == null) {
+            return "redirect:/contacts";
+        }
+
+        PagedListHolder<?> pages = (PagedListHolder<?>) request.getSession().getAttribute("listContacts");
+        int pagesize = 5;
+
+        pages = new PagedListHolder<>(list);
+        pages.setPageSize(pagesize);
+
+        final int gotoPage = pageNumber - 1;
+        if (gotoPage <= pages.getPageCount() && gotoPage >= 0) {
+            pages.setPage(gotoPage);
+        }
+
+        request.getSession().setAttribute("listContacts", pages);
+
+        int current = pages.getPage() + 1;
+        int begin = Math.max(1, current - list.size());
+        int end = Math.min(begin + 5, pages.getPageCount());
+        int totalPageCount = pages.getPageCount();
+
+        String baseUrl = "/contacts/page/";
+
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current);
         model.addAttribute("totalPageCount", totalPageCount);
         model.addAttribute("baseUrl", baseUrl);
         model.addAttribute("contacts", pages);
